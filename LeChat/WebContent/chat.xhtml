@@ -7,25 +7,26 @@
 	xmlns:composite="http://java.sun.com/jsf/composite"
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-<title>Insert title here</title>
-<script type="text/javascript" src="/LeChat/js/jquery.js"></script>
-<script type="text/javascript" src="/LeChat/js/primefaces.js"></script>
-<script type="text/javascript" src="/LeChat/js/push.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>Insert title here</title>
+	<script type="text/javascript" src="/LeChat/js/jquery.js"></script>
+	<script type="text/javascript" src="/LeChat/js/primefaces.js"></script>
+	<script type="text/javascript" src="/LeChat/js/push.js"></script>
 
-<link type="text/css" rel="stylesheet" href="/LeChat/css/primefaces.css" />
-<script type="text/javascript">
-	//<![CDATA[
-	function handleMessage(data) {
-		var chatContent = $(PrimeFaces.escapeClientId('form:public'));
-		chatContent.append(data + '<br />');
+	<link type="text/css" rel="stylesheet"
+		href="/LeChat/css/primefaces.css" />
+	<script type="text/javascript">
+		//         
+		function handleMessage(data) {
+			var chatContent = $(PrimeFaces.escapeClientId('form:public'));
+			chatContent.append(data + '<br />');
 
-		//keep scroll
-		chatContent.scrollTop(chatContent.height());
-	}
-	//]]>
-</script>
-<style type="text/css">
+			//keep scroll
+			chatContent.scrollTop(chatContent.height());
+		}
+		//
+	</script>
+	<style type="text/css">
 .messageInput {
 	width: 400px;
 }
@@ -85,15 +86,9 @@
 						styleClass="usersList">
 						<f:facet name="header">
                         Users
-                    </f:facet>
-
-						<p:commandButton title="Chat" icon="ui-icon-comment"
-							oncomplete="pChat.show()" update=":form:privateChatContainer">
-							<f:setPropertyActionListener value="#{user}"
-								target="#{chatView.privateUser}" />
-						</p:commandButton>
-                    #{user}
-                </p:dataList>
+                    	</f:facet>
+                    	#{user}
+                	</p:dataList>
 				</h:panelGrid>
 
 				<p:separator />
@@ -119,21 +114,6 @@
 			</h:panelGroup>
 
 		</p:fieldset>
-
-		<p:dialog widgetVar="pChat" header="Private Chat" modal="true"
-			showEffect="fade" hideEffect="fade">
-			<h:panelGrid id="privateChatContainer" columns="2"
-				columnClasses="vtop,vtop">
-				<p:outputLabel for="pChatInput" value="To: #{chatView.privateUser}" />
-				<p:inputTextarea id="pChatInput" value="#{chatView.privateMessage}"
-					rows="5" cols="30" />
-
-				<p:spacer />
-				<p:commandButton value="Send"
-					actionListener="#{chatView.sendPrivate}" oncomplete="pChat.hide()" />
-			</h:panelGrid>
-		</p:dialog>
-
 	</h:form>
 
 	<p:socket onMessage="handleMessage" channel="/chat" autoConnect="false"

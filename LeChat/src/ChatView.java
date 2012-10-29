@@ -1,38 +1,22 @@
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
 
-@ManagedBean
 public class ChatView {
 
-	private final PushContext pushContext = PushContextFactory.getDefault()
-			.getPushContext();
-
-    private Set<String> users = new HashSet<String>();
-	private String privateMessage;
+	private final PushContext pushContext = PushContextFactory.getDefault().getPushContext();
+	
+    private ChatUsers users;
 	private String globalMessage;
 	private String username;
 	private boolean loggedIn;
-	private String privateUser;
 	private final static String CHANNEL = "/chat/";
-
-	public void setUsers(Set<String> users) {
+	
+	public void setUsers(ChatUsers users) {
 		this.users = users;
-	}
-
-	public String getPrivateUser() {
-		return privateUser;
-	}
-
-	public void setPrivateUser(String privateUser) {
-		this.privateUser = privateUser;
 	}
 
 	public String getGlobalMessage() {
@@ -41,14 +25,6 @@ public class ChatView {
 
 	public void setGlobalMessage(String globalMessage) {
 		this.globalMessage = globalMessage;
-	}
-
-	public String getPrivateMessage() {
-		return privateMessage;
-	}
-
-	public void setPrivateMessage(String privateMessage) {
-		this.privateMessage = privateMessage;
 	}
 
 	public String getUsername() {
@@ -69,15 +45,7 @@ public class ChatView {
 
 	public void sendGlobal() {
 		pushContext.push(CHANNEL + "*", username + ": " + globalMessage);
-		System.out.println("bla");
 		globalMessage = null;
-	}
-
-	public void sendPrivate() {
-		pushContext.push(CHANNEL + privateUser, "[PM] " + username + ": "
-				+ privateMessage);
-
-		privateMessage = null;
 	}
 
 	public void login() {
@@ -93,8 +61,9 @@ public class ChatView {
 			requestContext.update("growl");
 		} else {
 			users.add(username);
-			pushContext.push(CHANNEL, username + " joined the channel.");
 			requestContext.execute("subscriber.connect('/" + username + "')");
+			requestContext.update("form:users");
+			pushContext.push(CHANNEL + "*", username + " joined the channel.");
 			loggedIn = true;
 		}
 	}
@@ -105,7 +74,7 @@ public class ChatView {
 		RequestContext.getCurrentInstance().update("form:users");
 
 		// push leave information
-		pushContext.push(CHANNEL, username + " left the channel.");
+		pushContext.push(CHANNEL + "*", username + " left the channel.");
 
 		// reset state
 		loggedIn = false;

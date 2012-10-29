@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
@@ -8,8 +9,13 @@ import javax.faces.bean.ManagedBean;
 @ApplicationScoped
 public class ChatUsers {
 
-	private List<String> users = new ArrayList<String>();
-
+	private List<String> users;
+	
+    @PostConstruct
+    public void init() {
+        this.users = new ArrayList<String>();
+    }
+	
 	public List<String> getUsers() {
 		return users;
 	}
@@ -18,11 +24,11 @@ public class ChatUsers {
 		this.users = users;
 	}
 
-	public void addUser(String user) {
+	public void add(String user) {
 		this.users.add(user);
 	}
 
-	public void removeUser(String user) {
+	public void remove(String user) {
 		this.users.remove(user);
 	}
 
