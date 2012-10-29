@@ -1,15 +1,17 @@
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
 
+@ManagedBean
 public class ChatView {
 
 	private final PushContext pushContext = PushContextFactory.getDefault()
 			.getPushContext();
 
-	private ChatUsers users;
+	private ChatUsers users = new ChatUsers();
 	private String privateMessage;
 	private String globalMessage;
 	private String username;
