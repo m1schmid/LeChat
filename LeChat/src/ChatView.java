@@ -1,6 +1,10 @@
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+
 import org.primefaces.context.RequestContext;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
@@ -11,7 +15,7 @@ public class ChatView {
 	private final PushContext pushContext = PushContextFactory.getDefault()
 			.getPushContext();
 
-	private ChatUsers users = new ChatUsers();
+    private Set<String> users = new HashSet<String>();
 	private String privateMessage;
 	private String globalMessage;
 	private String username;
@@ -19,7 +23,7 @@ public class ChatView {
 	private String privateUser;
 	private final static String CHANNEL = "/chat/";
 
-	public void setUsers(ChatUsers users) {
+	public void setUsers(Set<String> users) {
 		this.users = users;
 	}
 
@@ -65,7 +69,7 @@ public class ChatView {
 
 	public void sendGlobal() {
 		pushContext.push(CHANNEL + "*", username + ": " + globalMessage);
-
+		System.out.println("bla");
 		globalMessage = null;
 	}
 
@@ -88,7 +92,7 @@ public class ChatView {
 
 			requestContext.update("growl");
 		} else {
-			users.addUser(username);
+			users.add(username);
 			pushContext.push(CHANNEL, username + " joined the channel.");
 			requestContext.execute("subscriber.connect('/" + username + "')");
 			loggedIn = true;
@@ -97,7 +101,7 @@ public class ChatView {
 
 	public void disconnect() {
 		// remove user and update ui
-		users.removeUser(username);
+		users.remove(username);
 		RequestContext.getCurrentInstance().update("form:users");
 
 		// push leave information
