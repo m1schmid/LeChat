@@ -5,7 +5,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
-@ManagedBean
+@ManagedBean(name="chatUsers")
 @ApplicationScoped
 public class ChatUsers {
 

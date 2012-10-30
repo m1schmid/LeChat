@@ -1,14 +1,20 @@
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
 
+@ManagedBean
+@SessionScoped
 public class ChatView {
 
 	private final PushContext pushContext = PushContextFactory.getDefault().getPushContext();
 	
+	@ManagedProperty(value = "#{chatUsers}")
     private ChatUsers users;
 	private String globalMessage;
 	private String username;
@@ -62,7 +68,7 @@ public class ChatView {
 		} else {
 			users.add(username);
 			requestContext.execute("subscriber.connect('/" + username + "')");
-			requestContext.update("form:users");
+			
 			pushContext.push(CHANNEL + "*", username + " joined the channel.");
 			loggedIn = true;
 		}
