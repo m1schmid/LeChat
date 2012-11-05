@@ -8,9 +8,9 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-	
+
 	<title>LeChat</title>
-	
+
 	<script type="text/javascript" src="/LeChat/js/jquery.js"></script>
 	<script type="text/javascript" src="/LeChat/js/primefaces.js"></script>
 	<script type="text/javascript" src="/LeChat/js/push.js"></script>
@@ -24,96 +24,101 @@
 
 	<link type="text/css" rel="stylesheet" href="/LeChat/css/primefaces.css" />
 	<style type="text/css">
-		.messageInput {
-			width: 400px;
-		}
-
-		.publicColumn {
-			width: 80%;
-		}
-		
-		.usersColumn {
-			width: 20%;
-		}
-		
-		.vtop {
-			vertical-align: top;
-		}
-		
-		.chatlogs {
-			height: 200px;
-			overflow: auto;
-			padding: 0.5em 1em 0.5em 0.5em;
-		}
-		
-		.usersList {
-			height: 200px;
-			overflow: auto;
-		}
-		
-		.usersList ul {
-			list-style-type: none;
-			padding-left: 10px;
-		}
-		
-		.usersList ul li {
-			margin-bottom: 2px;
-		}
-		
-		.usersList .ui-button-text {
-			padding: 0;
-		}
+	.messageInput {
+		width: 400px;
+	}
+	
+	.publicColumn {
+		width: 80%;
+	}
+	
+	.usersColumn {
+		width: 20%;
+	}
+	
+	.vtop {
+		vertical-align: top;
+	}
+	
+	.chatlogs,.usersList {
+		height: 300px;
+		overflow: auto;
+		padding: 0.5em 1em 0.5em 0.5em;
+	}
+	
+	.usersList ul {
+		list-style-type: none;
+		padding-left: 10px;
+	}
+	
+	.usersList ul li {
+		margin-bottom: 2px;
+	}
+	
+	.usersList .ui-button-text {
+		padding: 0;
+	}
 	</style>
 </h:head>
 <body>
-	<p:growl id="growl" showDetail="true" />
 
 	<h:form id="form">
 
-		<p:fieldset id="container" legend="LeChat" toggleable="true">
+		<p:fieldset id="container" legend="LeChat">
 
-			<h:panelGroup rendered="#{chatView.loggedIn}">
+			<p:messages id="message" showDetail="true" closable="true" />
+			
+			<h:panelGroup rendered="#{chatController.loggedIn}">
 
 				<h:panelGrid columns="2" columnClasses="publicColumn,usersColumn"
 					style="width:100%">
+					
 					<p:outputPanel id="public" layout="block"
 						styleClass="ui-corner-all ui-widget-content chatlogs" />
-
-					<p:dataList id="users" var="user" value="#{chatUsers.users}"
-						styleClass="usersList">
+						
+					<p:dataList id="users" var="user" value="#{chatController.users}"
+						styleClass="usersList" >
 						<f:facet name="header">
-                        Users
+                        Users - #{chatController.room}
                     	</f:facet>
                     	#{user}
                 	</p:dataList>
 				</h:panelGrid>
 
-				<p:separator />
-
-				<p:inputText value="#{chatView.globalMessage}"
+				<p:inputText value="#{chatController.message}"
 					styleClass="messageInput" />
 				<p:spacer width="5" />
 				<p:commandButton value="Send"
-					actionListener="#{chatView.sendGlobal}"
+					actionListener="#{chatController.sendMessage}"
 					oncomplete="$('.messageInput').val('').focus()" />
 				<p:spacer width="5" />
-				<p:commandButton value="Disconnect"
-					actionListener="#{chatView.disconnect}" global="false"
+				<p:commandButton value="Disconnect" onclick="subscriber.disconnect();"
+					actionListener="#{chatController.disconnect}" global="false"
 					update="container" />
 			</h:panelGroup>
 
-			<h:panelGroup rendered="#{not chatView.loggedIn}">
-            Username: <p:inputText value="#{chatView.username}" />
-
-				<p:spacer width="5" />
-				<p:commandButton value="Login" actionListener="#{chatView.login}"
+			<h:panelGroup rendered="#{not chatController.loggedIn}" layout="block" style="margin:0 auto; width:300px;">
+				<h:panelGrid columns="2" cellpadding="5">  
+					<h:outputLabel value="Room: " for="dropdownRoom" /> 
+			        <p:selectOneMenu id="dropdownRoom" value="#{chatController.room}" effect="fade" editable="true" style="width: 200px;">
+			            <f:selectItems value="#{chatRooms.rooms}" />
+			        </p:selectOneMenu>
+					
+					<h:outputLabel value="Username: " for="username" /> 
+            	 	<p:inputText id="username" value="#{chatController.username}" />
+            	 	
+					<h:outputLabel value="" for="login" /> 
+					<p:commandButton id="login" value="Login" actionListener="#{chatController.login}"
 					update="container" icon="ui-icon-person" />
+				</h:panelGrid>
 			</h:panelGroup>
 
 		</p:fieldset>
 	</h:form>
 
-	<p:socket onMessage="handleMessage" channel="/chat" autoConnect="false"
-		widgetVar="subscriber" />
+	<p:socket onMessage="handleMessage" channel="" autoConnect="false"
+		widgetVar="subscriber">
+		<p:ajax event="message" update=":form:users" />
+	</p:socket>
 </body>
 </html>
