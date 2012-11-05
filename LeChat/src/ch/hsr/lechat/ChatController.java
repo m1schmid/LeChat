@@ -62,6 +62,7 @@ public class ChatController {
 	}
 
 	public void sendMessage() {
+		message = MessageParser.parse(message);
 		pushContext.push("/" + room + "/*", username + ": " + message);
 		message = null;
 	}
