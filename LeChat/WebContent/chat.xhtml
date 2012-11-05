@@ -18,7 +18,7 @@
 		function handleMessage(data) {
 			var chatContent = $(PrimeFaces.escapeClientId('form:public'));
 			chatContent.append(data + '<br />');
-			chatContent.scrollTop(chatContent.height());
+			chatContent.scrollTop(chatContent.prop('scrollHeight'));
 		}
 	</script>
 
