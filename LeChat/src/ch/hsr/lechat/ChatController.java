@@ -1,6 +1,7 @@
 package ch.hsr.lechat;
 import java.util.List;
 
+import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -23,7 +24,7 @@ public class ChatController {
 	private String room;
 	private String username;
 	private String message;
-	private boolean loggedIn;
+	private boolean loggedIn = false;
 	
 	public void setRooms(ChatRooms rooms) {
 		this.rooms = rooms;
@@ -76,7 +77,6 @@ public class ChatController {
 		FacesMessage msg = null;
 		
 		if (rooms.contains(username)) {
-			loggedIn = false;
 			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username taken", "Try with another username.");
 		} else if(username.isEmpty()) {
 			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username empty", "");
@@ -92,14 +92,13 @@ public class ChatController {
 		
 		FacesContext.getCurrentInstance().addMessage(null,msg);
 	}
-
+	
+	@PreDestroy
 	public void disconnect() {
 
-		//RequestContext.getCurrentInstance().execute("subscriber.disconnect()");
 		rooms.remove(room, username);
 		pushContext.push("/" + room + "/*", username + " left the channel.");
 		
-		// reset state
 		room = null;
 		username = null;
 		loggedIn = false;

@@ -20,7 +20,6 @@ public class ChatRooms {
     }
 	
     public List<String> getRooms(){
-    	
     	return new ArrayList<String>(chatRooms.keySet());
 	}
 	
@@ -29,27 +28,23 @@ public class ChatRooms {
 	}
 
 	public void put(String roomName, String user) {
-		ChatUsers room = chatRooms.get(roomName);
-		if(room == null){
-			room = new ChatUsers();
-			chatRooms.put(roomName, room);
+		if(!chatRooms.containsKey(roomName)){
+			chatRooms.put(roomName, new ChatUsers());
 		}
-		room.add(user);
+		chatRooms.get(roomName).add(user);
 	}
 
 	public void remove(String roomName, String user) {
-		ChatUsers room = chatRooms.get(roomName);
-		room.remove(user);
-		if(room.isEmpty()){
+		ChatUsers roomUsers = chatRooms.get(roomName);
+		roomUsers.remove(user);
+		if(roomUsers.isEmpty())
 			chatRooms.remove(roomName);
-		}
 	}
 
 	public boolean contains(String user) {
-		for (String room : chatRooms.keySet()) {
-			if(chatRooms.get(room).contains(user)){
+		for (ChatUsers roomUsers : chatRooms.values()) {
+			if(roomUsers.contains(user))
 				return true;
-			}
 		}
 		return false;
 	}

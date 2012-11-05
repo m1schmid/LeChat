@@ -20,6 +20,7 @@
 			chatContent.append(data + '<br />');
 			chatContent.scrollTop(chatContent.prop('scrollHeight'));
 		}
+		$(window).unload(function(){subscriber.disconnect();});
 	</script>
 
 	<link type="text/css" rel="stylesheet" href="/LeChat/css/primefaces.css" />
