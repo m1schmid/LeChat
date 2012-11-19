@@ -10,12 +10,12 @@ public final class MessageParser {
 	
 	static {
 	  HashMap<String, String> m = new HashMap<String, String>();
-	  m.put("!no","<img src='/LeChat/images/memes/no.png'/>");
-	  m.put("!foreveralone","<img src='/LeChat/images/memes/foreveralone.png'/>");
-	  m.put("!megusta","<img src='/LeChat/images/memes/megusta.png'/>");
-	  m.put("!kidding","<img src='/LeChat/images/memes/kidding.png'/>");
-	  m.put("!tableflip","<img src='/LeChat/images/memes/tableflip.png'/>");
-	  m.put("!trololo","<img src='/LeChat/images/memes/trololo.png'/>");
+	  m.put("(no)","<img src='/LeChat/images/memes/no.png'/>");
+	  m.put("(foreveralone)","<img src='/LeChat/images/memes/foreveralone.png'/>");
+	  m.put("(megusta)","<img src='/LeChat/images/memes/megusta.png'/>");
+	  m.put("(kidding)","<img src='/LeChat/images/memes/kidding.png'/>");
+	  m.put("(tableflip)","<img src='/LeChat/images/memes/tableflip.png'/>");
+	  m.put("(trololo)","<img src='/LeChat/images/memes/trololo.png'/>");
 	  smileys = Collections.unmodifiableMap(m);
 	}
 	

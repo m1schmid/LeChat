@@ -1,7 +1,9 @@
 package ch.hsr.lechat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ApplicationScoped;
@@ -12,11 +14,11 @@ import javax.faces.bean.ManagedBean;
 @ApplicationScoped
 public class ChatRooms {
 
-	private HashMap<String, ChatUsers> chatRooms;
+	private Map<String, ChatUsers> chatRooms;
 	
     @PostConstruct
     public void init() {
-        this.chatRooms = new HashMap<String, ChatUsers>();
+        this.chatRooms = Collections.synchronizedMap(new HashMap<String, ChatUsers>());
     }
 	
     public List<String> getRooms(){

@@ -1,5 +1,6 @@
 package ch.hsr.lechat;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
@@ -76,15 +77,18 @@ public class ChatController {
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		FacesMessage msg = null;
 		
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceBundle bundle = context.getApplication().getResourceBundle(context, "lang");
+		
 		if (rooms.contains(username)) {
-			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username taken", "Try with another username.");
+			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username taken", bundle.getString("username_taken"));
 		} else if(username.isEmpty()) {
-			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username empty", "");
+			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("username_empty"), "");
 		} else if(room.isEmpty()) {
-			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Select or create room!", "");
+			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("room_empty"), "");
 		} else {
 			rooms.put(room, username);
-			msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Logged in!", "");
+			msg = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("logged_in"), "");
 			requestContext.execute("subscriber.connect('/" + room + "/" + username + "')");
 			pushContext.push("/" + room + "/*", username + " joined the channel.");
 			loggedIn = true;

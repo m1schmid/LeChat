@@ -9,7 +9,7 @@
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 
-	<title>LeChat</title>
+	<title>LeChat - #{lang['welcome']}</title>
 
 	<script type="text/javascript" src="/LeChat/js/jquery.js"></script>
 	<script type="text/javascript" src="/LeChat/js/primefaces.js"></script>
@@ -20,67 +20,69 @@
 			chatContent.append(data + '<br />');
 			chatContent.scrollTop(chatContent.prop('scrollHeight'));
 		}
-		$(window).unload(function(){subscriber.disconnect();});
+		$(window).unload(function() {
+			subscriber.disconnect();
+		});
 	</script>
 
-	<link type="text/css" rel="stylesheet" href="/LeChat/css/primefaces.css" />
+	<link type="text/css" rel="stylesheet"
+		href="/LeChat/css/primefaces.css" />
 	<style type="text/css">
-	.messageInput {
-		width: 400px;
-	}
-	
-	.publicColumn {
-		width: 80%;
-	}
-	
-	.usersColumn {
-		width: 20%;
-	}
-	
-	.vtop {
-		vertical-align: top;
-	}
-	
-	.chatlogs,.usersList {
-		height: 300px;
-		overflow: auto;
-		padding: 0.5em 1em 0.5em 0.5em;
-	}
-	
-	.usersList ul {
-		list-style-type: none;
-		padding-left: 10px;
-	}
-	
-	.usersList ul li {
-		margin-bottom: 2px;
-	}
-	
-	.usersList .ui-button-text {
-		padding: 0;
-	}
-	</style>
+.messageInput {
+	width: 400px;
+}
+
+.publicColumn {
+	width: 80%;
+}
+
+.usersColumn {
+	width: 20%;
+}
+
+.vtop {
+	vertical-align: top;
+}
+
+.chatlogs,.usersList {
+	height: 300px;
+	overflow: auto;
+	padding: 0.5em 1em 0.5em 0.5em;
+}
+
+.usersList ul {
+	list-style-type: none;
+	padding-left: 10px;
+}
+
+.usersList ul li {
+	margin-bottom: 2px;
+}
+
+.usersList .ui-button-text {
+	padding: 0;
+}
+</style>
 </h:head>
 <body>
 
 	<h:form id="form">
-
 		<p:fieldset id="container" legend="LeChat">
 
 			<p:messages id="message" showDetail="true" closable="true" />
-			
+
 			<h:panelGroup rendered="#{chatController.loggedIn}">
 
 				<h:panelGrid columns="2" columnClasses="publicColumn,usersColumn"
 					style="width:100%">
-					
-					<p:outputPanel id="public" layout="block"
+
+					<p:outputPanel id="public" layout="block" legend="#{chatController.room}"
 						styleClass="ui-corner-all ui-widget-content chatlogs" />
-						
+
 					<p:dataList id="users" var="user" value="#{chatController.users}"
-						styleClass="usersList" >
+						styleClass="usersList">
 						<f:facet name="header">
-                        Users - #{chatController.room}
+                        #{lang['users']}:  #{chatController.room}
                     	</f:facet>
                     	#{user}
                 	</p:dataList>
@@ -89,28 +91,41 @@
 				<p:inputText value="#{chatController.message}"
 					styleClass="messageInput" />
 				<p:spacer width="5" />
-				<p:commandButton value="Send"
+				<p:commandButton value="#{lang['send']}"
 					actionListener="#{chatController.sendMessage}"
 					oncomplete="$('.messageInput').val('').focus()" />
 				<p:spacer width="5" />
-				<p:commandButton value="Disconnect" onclick="subscriber.disconnect();"
+				<p:commandButton value="#{lang['disconnect']}"
+					onclick="subscriber.disconnect();"
 					actionListener="#{chatController.disconnect}" global="false"
 					update="container" />
 			</h:panelGroup>
 
-			<h:panelGroup rendered="#{not chatController.loggedIn}" layout="block" style="margin:0 auto; width:300px;">
-				<h:panelGrid columns="2" cellpadding="5">  
-					<h:outputLabel value="Room: " for="dropdownRoom" /> 
-			        <p:selectOneMenu id="dropdownRoom" value="#{chatController.room}" effect="fade" editable="true" style="width: 200px;">
-			            <f:selectItems value="#{chatRooms.rooms}" />
-			        </p:selectOneMenu>
+			<h:panelGroup rendered="#{not chatController.loggedIn}"
+				layout="block" style="margin:0 auto; width:300px;">
+				<h:panelGrid columns="2" cellpadding="5">
+				
+					<h:outputLabel value="#{lang['language']}: " for="language" />
+					<p:selectOneMenu id="language" value="#{language.localeCode}"
+						onchange="$('#form').submit()"
+						valueChangeListener="#{language.countryLocaleCodeChanged}"
+						style="width: 200px;">
+						<f:selectItems value="#{language.countriesInMap}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel value="#{lang['room']}: " for="dropdownRoom" />
+					<p:selectOneMenu id="dropdownRoom" value="#{chatController.room}"
+						effect="fade" editable="true" style="width: 200px;">
+						<f:selectItems value="#{chatRooms.rooms}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel value="#{lang['username']}: " for="username" />
+					<p:inputText id="username" value="#{chatController.username}" />
 					
-					<h:outputLabel value="Username: " for="username" /> 
-            	 	<p:inputText id="username" value="#{chatController.username}" />
-            	 	
-					<h:outputLabel value="" for="login" /> 
-					<p:commandButton id="login" value="Login" actionListener="#{chatController.login}"
-					update="container" icon="ui-icon-person" />
+					<h:outputLabel value="" for="login" />
+					<p:commandButton id="login" value="#{lang['login']}"
+						actionListener="#{chatController.login}" update="container"
+						icon="ui-icon-person" />
 				</h:panelGrid>
 			</h:panelGroup>
 

@@ -1,10 +1,11 @@
 package ch.hsr.lechat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ChatUsers {
 
-	private List<String> users = new ArrayList<String>();
+	private List<String> users = Collections.synchronizedList(new ArrayList<String>());
 	
 	public List<String> getUsers() {
 		return users;
