@@ -9,34 +9,26 @@
 <script
 	src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 	<script type="text/javascript">
-	jQuery.support.cors = true;
-	var getChatsUrl = 'http://sifsv-80018.hsr.ch/Service/ChatService.asmx?op=GetChats';
+
+	$.support.cors = true;
+	var serviceUrl = 'http://sifsv-80018.hsr.ch/Service/ChatService.asmx';
 	$(document).bind('pageinit', function(){
-		var soapMessage = '<?xml version="1.0" encoding="utf-8"?>\
-			<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">\
-			  <soap:Body>\
-			    <GetChats xmlns="http://www.hsr.ch/" />\
-			  </soap:Body>\
-			</soap:Envelope>';
 
 		$.ajax({
-			url: getChatsUrl,
+			url: serviceUrl + '/GetChats',
 			type: "POST",
-			dataType: "xml",
-			data: soapMessage,
+			dataType: "json",
 			success: listChats,
-			contentType: "text/xml; charset=\"utf-8\""
+			error: function(response){
+				alert("error");
+				console.log(response);
+			},
+			contentType: "application/json; charset=utf-8"
 		});
 
-		function listChats(xmlHttpRequest, status)
+		function listChats(object, status)
 		{
-		 	$(xmlHttpRequest.responseXML)
-		    	.find('GetChatsResult')
-		    	.each(function()
-			 		{
-			   			var name = $(this).find('Name').text();
-			   			$('#channel-list').append('<li>' + name + '</li>');
-			 		});
+			alert(object);
 		}
 	});
 	</script>
@@ -58,14 +50,6 @@
 			</fieldset>
 			<ul data-role="listview" data-inset="true" id="channel-list">
 				<li data-role="list-divider" role="heading">Channels</li>
-				<li>
-					<a href="#channel" data-transition="slide">
-						Sample Channel
-						<span class="ui-li-count">
-						12
-						</span>
-					</a>
-				</li>
 				<li>
 					<a href="#channel" data-transition="slide">
 						Sample Channel
