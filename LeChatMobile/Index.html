@@ -11,16 +11,21 @@
 	<script type="text/javascript">
 
 	$.support.cors = true;
-	var serviceUrl = 'http://sifsv-80018.hsr.ch/Service/ChatService.asmx';
+	var serviceUrl = 'http://sifsv-80018.hsr.ch/Service/ChatService.asmx/';
 	$(document).bind('pageinit', function(){
-
+		
+		$('.channel-list-item').live("click", function(){
+			alert(validatUsername());
+		});
+		
+		$('#channel-list').html('<li data-role="list-divider" role="heading">Channels</li>');
+		
 		$.ajax({
-			url: serviceUrl + '/GetChats',
+			url: serviceUrl + 'GetChats',
 			type: "POST",
 			dataType: "json",
 			success: listChats,
 			error: function(response){
-				alert("error");
 				console.log(response);
 			},
 			contentType: "application/json; charset=utf-8"
@@ -28,7 +33,20 @@
 
 		function listChats(object, status)
 		{
-			alert(object);
+			$(object.d).each(function(){
+				var memeberCount = '<span class="ui-li-count">'+ this.Players.length+'</span>';
+				var channelLink = '<a href="' + this.Id + '" class="channel-list-item">' + this.Name + memeberCount +'</a>';
+				$('#channel-list').append('<li>' + channelLink + '</li>');
+			});
+			
+			$('#channel-list').listview('refresh');
+		}
+		
+		function validatUsername(){
+			if($('#username').val() == ''){
+				return false;
+			}
+			return true;
 		}
 	});
 	</script>
@@ -48,17 +66,7 @@
 				<label for="username"> Please enter your name: </label> 
 				<input name="" id="username" placeholder="username" type="text" />
 			</fieldset>
-			<ul data-role="listview" data-inset="true" id="channel-list">
-				<li data-role="list-divider" role="heading">Channels</li>
-				<li>
-					<a href="#channel" data-transition="slide">
-						Sample Channel
-						<span class="ui-li-count">
-						12
-						</span>
-					</a>
-				</li>
-			</ul>
+			<ul data-role="listview" data-inset="true" id="channel-list"></ul>
 			<a href="#create-channel" data-role="button">Create new Channel</a>
 		</div>
 		<!-- /content -->
