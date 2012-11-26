@@ -1,0 +1,2 @@
+19.11.2012 DW/MS je 3h - Design der Pages
+26.11.2012 DW/MS je 4h - Implementation der AJAX Calls 
