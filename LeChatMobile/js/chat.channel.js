@@ -11,7 +11,7 @@ function updateChannel(){
 		});
 		var text = '';
 		$(data.d.ChatLines).each(function(){
-			text +=  this.Player.PlayerName + ': ' + this.Text + '\n';
+			text +=  this.Player.PlayerName + ': ' + this.Text + '\r\n';
 		});
 		$('#messages').text(text);
 	});
@@ -26,6 +26,7 @@ $('#channel').live('pageinit', function(){
 		var message = $('#message').val();
 		if(message != ''){
 			post('WriteLine', {playerToken: chatData.playerToken, text: message}, updateChannel);
+			$('#message').val('');
 		}
 	});
 	
