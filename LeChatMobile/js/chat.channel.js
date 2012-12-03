@@ -1,3 +1,5 @@
+var height = 0;
+
 function updateChannel(){
 	post('GetChat', {chatId: chatData.chatId}, function(data){
 		$('#channel-title').text('Channel: ' + data.d.Name);
@@ -11,9 +13,18 @@ function updateChannel(){
 		});
 		var text = '';
 		$(data.d.ChatLines).each(function(){
-			text +=  this.Player.PlayerName + ': ' + this.Text + '\r\n';
+			var cssClass="triangle-right left";
+			if(this.Player.PlayerName == chatData.userName){
+				cssClass="triangle-right right";
+			}
+			
+			$('<p class="' + cssClass + '">').text(this.Text).prepend('<i>' + this.Player.PlayerName + '</i>:<br />').appendTo('#messages');
 		});
-		$('#messages').text(text);
+
+		if(height != $(document).height()){
+			height = $(document).height();
+			$("html, body").animate({ scrollTop: $(document).height() }, "slow");
+		}
 	});
 }
 var channelVisible;
